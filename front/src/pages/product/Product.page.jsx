@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 import {
 	Container,
 	Row,
@@ -10,11 +11,21 @@ import {
 	Button,
 } from "react-bootstrap";
 import Rating from "../../components/rating/Rating.component";
-import products from "../../products";
 
 const Product = () => {
+	const [product, setProduct] = React.useState([]);
 	const { id } = useParams();
-	const product = products.find((p) => p._id === id);
+	useEffect(() => {
+		const fetchProd = async () => {
+			const res = await axios.get(`/api/products/${id}`);
+			setProduct(res.data);
+		};
+		fetchProd();
+	}, [id]);
+
+	if (product.length === 0) {
+		return <>wait</>;
+	}
 	return (
 		<Container>
 			<Link className="btn btn-dark my-5" to="/">

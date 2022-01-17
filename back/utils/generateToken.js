@@ -1,3 +1,3 @@
 function generateToken() {}
 
-module.exports = generateToken;
+export default generateToken;
