@@ -9,6 +9,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
+    "seeder": "node seeder.js",
+    "destroyseed": "node seeder.js -d",
     "start": "node server.js"
   },
   "dependencies": {

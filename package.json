@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix back\" \"npm run start --prefix front\"",
+    "data:import": "npm run seeder --prefix back",
+    "data:destroy": "npm run destroyseed --prefix back",
     "start": "npm run start --prefix back"
   }
 }
