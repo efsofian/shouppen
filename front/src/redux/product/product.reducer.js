@@ -25,7 +25,7 @@ import {
 	PRODUCT_TOP_FAIL,
 } from "./product.types";
 
-const productReducer = (state = { products: [] }, action) => {
+export const productListReducer = (state = { products: [] }, action) => {
 	switch (action.type) {
 		case PRODUCT_LIST_REQUEST:
 			return {
@@ -47,4 +47,27 @@ const productReducer = (state = { products: [] }, action) => {
 	}
 };
 
-export default productReducer;
+export const productDetailsReducer = (
+	state = { product: { reviews: [] } },
+	action
+) => {
+	switch (action.type) {
+		case PRODUCT_DETAILS_REQUEST:
+			return {
+				loading: true,
+				...state,
+			};
+		case PRODUCT_DETAILS_SUCCESS:
+			return {
+				loading: false,
+				product: action.payload,
+			};
+		case PRODUCT_DETAILS_FAIL:
+			return {
+				loading: false,
+				error: action.payload,
+			};
+		default:
+			return state;
+	}
+};

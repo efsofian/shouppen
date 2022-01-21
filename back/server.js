@@ -14,6 +14,8 @@ const app = express();
 
 db(process.env.MONGO_URI);
 
+app.use(express.json());
+
 app.use("/api/products", productRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/users", userRouter);
@@ -21,7 +23,6 @@ app.use("/api/upload", uploadRouter);
 
 app.use(notFound);
 app.use(errorHandler);
-console.log(errorHandler);
 
 app.listen(PORT, () => {
 	console.log(`listening on PORT: ${PORT}`.yellow.bold);

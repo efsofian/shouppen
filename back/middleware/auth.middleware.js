@@ -4,10 +4,9 @@ import User from "../models/userModel.mongo.js";
 
 export const protect = asyncHandler(async (req, res, next) => {
 	let token;
-	console.log("protect middleware called");
 	if (
 		req.headers.authorization &&
-		req.headers.authorization.startsWith("Beared")
+		req.headers.authorization.startsWith("Bearer")
 	) {
 		try {
 			token = req.headers.authorization.split(" ")[1];
@@ -15,7 +14,6 @@ export const protect = asyncHandler(async (req, res, next) => {
 			req.user = await User.findById(decoded.id).select("-password");
 			next();
 		} catch (e) {
-			console.log("token failed");
 			console.error(e);
 			res.status(401);
 			throw new Error("Not Authorized, token failed");
