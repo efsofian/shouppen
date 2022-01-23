@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
 	USER_LOGIN_REQUEST,
 	USER_LOGIN_SUCCESS,
@@ -14,15 +15,144 @@ import {
 	USER_UPDATE_PROFILE_SUCCESS,
 	USER_UPDATE_PROFILE_FAIL,
 	USER_UPDATE_PROFILE_RESET,
-	USER_LIST_REQUEST,
-	USER_LIST_SUCCESS,
-	USER_LIST_FAIL,
-	USER_LIST_RESET,
-	USER_DELETE_REQUEST,
-	USER_DELETE_SUCCESS,
-	USER_DELETE_FAIL,
-	USER_UPDATE_REQUEST,
-	USER_UPDATE_SUCCESS,
-	USER_UPDATE_FAIL,
-	USER_UPDATE_RESET,
+	// USER_LIST_REQUEST,
+	// USER_LIST_SUCCESS,
+	// USER_LIST_FAIL,
+	// USER_LIST_RESET,
+	// USER_DELETE_REQUEST,
+	// USER_DELETE_SUCCESS,
+	// USER_DELETE_FAIL,
+	// USER_UPDATE_REQUEST,
+	// USER_UPDATE_SUCCESS,
+	// USER_UPDATE_FAIL,
+	// USER_UPDATE_RESET,
 } from "./user.types";
+
+export const login = (email, password) => async (dispatch) => {
+	try {
+		dispatch({
+			type: USER_LOGIN_REQUEST,
+		});
+		const options = {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		};
+		const { data } = await axios.post(
+			"/api/users/login",
+			{ email, password },
+			options
+		);
+		dispatch({
+			type: USER_LOGIN_SUCCESS,
+			payload: data,
+		});
+		localStorage.setItem("userInfo", JSON.stringify(data));
+	} catch (e) {
+		dispatch({
+			type: USER_LOGIN_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};
+
+export const logout = () => async (dispatch) => {
+	localStorage.removeItem("userInfo");
+	dispatch({
+		type: USER_LOGOUT,
+	});
+};
+
+export const register = (name, email, password) => async (dispatch) => {
+	try {
+		dispatch({
+			type: USER_REGISTER_REQUEST,
+		});
+		const options = {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		};
+		const { data } = await axios.post(
+			"/api/users",
+			{ name, email, password },
+			options
+		);
+		dispatch({
+			type: USER_REGISTER_SUCCESS,
+			payload: data,
+		});
+		dispatch({
+			type: USER_LOGIN_SUCCESS,
+			payload: data,
+		});
+		localStorage.setItem("userInfo", JSON.stringify(data));
+	} catch (e) {
+		dispatch({
+			type: USER_REGISTER_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: USER_DETAILS_REQUEST,
+		});
+		const { token } = getState().userLogin.userInfo;
+		const options = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const { data } = await axios.get(`/api/users/profile`, options);
+		dispatch({
+			type: USER_DETAILS_SUCCESS,
+			payload: data,
+		});
+	} catch (e) {
+		dispatch({
+			type: USER_DETAILS_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};
+
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: USER_UPDATE_PROFILE_REQUEST,
+		});
+		const { token } = getState().userLogin.userInfo;
+		const options = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const { data } = await axios.put(`/api/users/profile`, user, options);
+		dispatch({
+			type: USER_UPDATE_PROFILE_SUCCESS,
+			payload: data,
+		});
+	} catch (e) {
+		dispatch({
+			type: USER_UPDATE_PROFILE_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};

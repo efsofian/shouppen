@@ -1,10 +1,10 @@
 import axios from "axios";
 import {
 	CART_ADD_ITEM,
-	CART_CLEAR_ITEMS,
+	// CART_CLEAR_ITEMS,
 	CART_REMOVE_ITEM,
-	CART_SAVE_SHIPPING_ADDRESS,
-	CART_SAVE_PAYMENT_METHOD,
+	// CART_SAVE_SHIPPING_ADDRESS,
+	// CART_SAVE_PAYMENT_METHOD,
 } from "./cart.types";
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {

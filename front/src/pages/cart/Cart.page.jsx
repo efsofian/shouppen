@@ -21,7 +21,7 @@ import { addToCart, removeFromCart } from "../../redux/cart/cart.actions";
 const Cart = () => {
 	const productId = useParams().id;
 	const navigate = useNavigate();
-	const [searchparams, setSearchParams] = useSearchParams();
+	const [searchparams] = useSearchParams();
 	const qty = searchparams.get("qty") ? searchparams.get("qty") : 1;
 	const cart = useSelector((state) => state.cart);
 	const { cartItems } = cart;
