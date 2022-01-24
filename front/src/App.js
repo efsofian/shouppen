@@ -9,6 +9,9 @@ import Home from "./pages/home/Home.page";
 import Login from "./pages/login/Login.page";
 import Register from "./pages/register/Register.page";
 import Profile from "./pages/profile/Profile.page";
+import Shipping from "./pages/shipping/Shipping.page";
+import Payment from "./pages/payment/Payment.page";
+import PlaceOrder from "./pages/placeorder/PlaceOrder.page";
 
 const App = () => {
 	return (
@@ -23,7 +26,10 @@ const App = () => {
 						<Route path="/register" element={<Register />} />
 						<Route path="/profile" element={<Profile />} />
 						<Route path="/cart/:id" element={<Cart />} />
-						<Route path="/cart/" element={<Cart />} />
+						<Route path="/cart" element={<Cart />} />
+						<Route path="/shipping" element={<Shipping />} />
+						<Route path="/payment" element={<Payment />} />
+						<Route path="/placeorder" element={<PlaceOrder />} />
 					</Routes>
 				</main>
 				<Footer />

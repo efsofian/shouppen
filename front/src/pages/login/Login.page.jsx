@@ -15,7 +15,7 @@ const Login = () => {
 	const navigate = useNavigate();
 	const redirect = searchparams.get("redirect")
 		? searchparams.get("redirect")
-		: "/";
+		: "";
 	const dispatch = useDispatch();
 
 	const submitHandler = (e) => {
@@ -24,7 +24,7 @@ const Login = () => {
 	};
 	useEffect(() => {
 		if (userInfo) {
-			navigate(redirect);
+			navigate(`/${redirect}`);
 		}
 	}, [dispatch, userInfo, navigate, redirect]);
 	return (
