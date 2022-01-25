@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import FormContainer from "../../components/form/FormContainer.component";
 import CheckoutSteps from "../../components/checkout/CheckoutSteps.component";
 import Message from "../../components/message/Message.component";
+import { createOrder } from "../../redux/order/order.actions";
 
 const PlaceOrder = () => {
 	const cart = useSelector((state) => state.cart);
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const addDecimals = (num) => (Math.round(num * 100) / 100).toFixed(2);
 
@@ -21,10 +23,28 @@ const PlaceOrder = () => {
 		Number(cart.shippingPrice) +
 		Number(cart.taxPrice)
 	).toFixed(2);
+	const orderCreate = useSelector((state) => state.orderCreate);
+	const { order, success, error } = orderCreate;
 	const placeOrderHandler = (e) => {
 		e.preventDefault();
-		console.log("ordered!");
+		dispatch(
+			createOrder({
+				orderItems: cart.cartItems,
+				shippingAddress: cart.shippingAddress,
+				paymentMethod: cart.paymentMethod,
+				itemsPrice: cart.itemsPrice,
+				shippingPrice: cart.shippingPrice,
+				taxPrice: cart.taxPrice,
+				totalPrice: cart.totalPrice,
+			})
+		);
 	};
+	useEffect(() => {
+		if (success) {
+			navigate(`/order/${order._id}`);
+		}
+		// eslint-disable-next-line
+	}, [navigate, success]);
 	return (
 		<>
 			<CheckoutSteps step1 step2 step3 step4 />
@@ -110,6 +130,9 @@ const PlaceOrder = () => {
 								</Row>
 							</ListGroup.Item>
 							<ListGroup.Item>
+								<ListGroup.Item>
+									{error && <Message variant="danger">{error}</Message>}
+								</ListGroup.Item>
 								<Button
 									type="button"
 									className="btn-block"
