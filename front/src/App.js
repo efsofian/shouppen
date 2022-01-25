@@ -15,6 +15,9 @@ import PlaceOrder from "./pages/placeorder/PlaceOrder.page";
 import Order from "./pages/order/Order.page";
 import UserList from "./pages/userlist/UserList.page";
 import UserEdit from "./pages/useredit/UserEdit.page";
+import ProductList from "./pages/productlist/ProductList.page";
+import ProductEdit from "./pages/productedit/ProductEdit.page";
+import OrderList from "./pages/orderlist/OrderList.page";
 
 const App = () => {
 	return (
@@ -36,6 +39,9 @@ const App = () => {
 						<Route path="/order/:id" element={<Order />} />
 						<Route path="/admin/userlist" element={<UserList />} />
 						<Route path="/admin/user/:id/edit" element={<UserEdit />} />
+						<Route path="/admin/productlist" element={<ProductList />} />
+						<Route path="/admin/product/:id/edit" element={<ProductEdit />} />
+						<Route path="/admin/orderlist" element={<OrderList />} />
 					</Routes>
 				</main>
 				<Footer />

@@ -13,14 +13,20 @@ import {
 	orderDetailsReducer,
 	orderPayReducer,
 	orderListMyReducer,
+	orderListReducer,
+	orderDeliverReducer,
 } from "./order/order.reducer";
 import cartReducer from "./cart/cart.reducer";
 import {
 	productListReducer,
 	productDetailsReducer,
+	productDeleteReducer,
+	productCreateReducer,
+	productUpdateReducer,
 } from "./product/product.reducer";
 
 const reducers = combineReducers({
+	cart: cartReducer,
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userDetails: userDetailsReducer,
@@ -32,9 +38,13 @@ const reducers = combineReducers({
 	orderDetails: orderDetailsReducer,
 	orderPay: orderPayReducer,
 	orderListMy: orderListMyReducer,
-	cart: cartReducer,
+	orderList: orderListReducer,
+	orderDeliver: orderDeliverReducer,
 	productList: productListReducer,
 	productDetails: productDetailsReducer,
+	productDelete: productDeleteReducer,
+	productCreate: productCreateReducer,
+	productUpdate: productUpdateReducer,
 });
 
 export default reducers;

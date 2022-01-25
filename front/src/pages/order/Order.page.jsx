@@ -6,18 +6,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import Loader from "../../components/loader/Loader.component";
 import Message from "../../components/message/Message.component";
-import { getOrderDetails, payOrder } from "../../redux/order/order.actions";
-import { ORDER_PAY_RESET } from "../../redux/order/order.types";
+import {
+	getOrderDetails,
+	payOrder,
+	deliverOrder,
+} from "../../redux/order/order.actions";
+import {
+	ORDER_PAY_RESET,
+	ORDER_DELIVER_RESET,
+} from "../../redux/order/order.types";
 
 const Order = () => {
 	const { id: OrderId } = useParams();
 	const [sdkReady, setSdkReady] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
 	const orderDetails = useSelector((state) => state.orderDetails);
 	const { order, loading, error } = orderDetails;
+
 	const orderPay = useSelector((state) => state.orderPay);
 	const { loading: loadingPay, success: successPay } = orderPay;
+
+	const orderDeliver = useSelector((state) => state.orderDeliver);
+	const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 	const addDecimals = (num) => (Math.round(num * 100) / 100).toFixed(2);
@@ -40,8 +53,9 @@ const Order = () => {
 			};
 			document.body.appendChild(script);
 		};
-		if (!order || successPay || order._id !== OrderId) {
+		if (!order || successPay || order._id !== OrderId || successDeliver) {
 			dispatch({ type: ORDER_PAY_RESET });
+			dispatch({ type: ORDER_DELIVER_RESET });
 			dispatch(getOrderDetails(OrderId));
 		} else if (!order.isPaid) {
 			if (!window.paypal) {
@@ -50,7 +64,20 @@ const Order = () => {
 				setSdkReady(true);
 			}
 		}
-	}, [dispatch, navigate, order, successPay, OrderId, userInfo]);
+	}, [
+		dispatch,
+		navigate,
+		order,
+		successPay,
+		OrderId,
+		userInfo,
+		successDeliver,
+	]);
+
+	const deliverHandler = () => {
+		dispatch(deliverOrder(order));
+	};
+
 	if (!loading) {
 		order.itemsPrice = addDecimals(
 			order.orderItems.reduce((acc, curr) => acc + curr.price * curr.qty, 0)
@@ -177,6 +204,20 @@ const Order = () => {
 									)}
 								</ListGroup.Item>
 							)}
+							{loadingDeliver && <Loader />}
+							{userInfo &&
+								userInfo.isAdmin &&
+								order.isPaid &&
+								!order.isDelivered && (
+									<ListGroup.Item>
+										<Button
+											type="button"
+											className="btn btn-block"
+											onClick={deliverHandler}>
+											Mark as Delivered
+										</Button>
+									</ListGroup.Item>
+								)}
 						</ListGroup>
 					</Card>
 				</Col>

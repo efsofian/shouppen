@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import dotenv from "dotenv";
 import colors from "colors";
 import db from "./config/db.js";
@@ -24,6 +25,8 @@ app.use("/api/upload", uploadRouter);
 app.get("/api/config/paypal", (req, res) => {
 	res.send(process.env.PAYPAL_CLIENT_ID);
 });
+
+app.use("/uploads", express.static(path.join(path.resolve(), "/uploads")));
 
 app.use(notFound);
 app.use(errorHandler);

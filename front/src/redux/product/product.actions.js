@@ -12,7 +12,6 @@ import {
 	PRODUCT_CREATE_REQUEST,
 	PRODUCT_CREATE_SUCCESS,
 	PRODUCT_CREATE_FAIL,
-	PRODUCT_CREATE_RESET,
 	PRODUCT_UPDATE_REQUEST,
 	PRODUCT_UPDATE_SUCCESS,
 	PRODUCT_UPDATE_FAIL,
@@ -56,6 +55,93 @@ export const listProductDetails = (id) => async (dispatch) => {
 	} catch (e) {
 		dispatch({
 			type: PRODUCT_DETAILS_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};
+
+export const deleteProduct = (id) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: PRODUCT_DELETE_REQUEST,
+		});
+		const { token } = getState().userLogin.userInfo;
+		const options = {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		await axios.delete(`/api/products/${id}`, options);
+		dispatch({
+			type: PRODUCT_DELETE_SUCCESS,
+		});
+	} catch (e) {
+		dispatch({
+			type: PRODUCT_DELETE_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};
+
+export const createProduct = () => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: PRODUCT_CREATE_REQUEST,
+		});
+		const { token } = getState().userLogin.userInfo;
+		const options = {
+			"Content-Type": "application/json",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const { data } = await axios.post(`/api/products`, {}, options);
+		dispatch({
+			type: PRODUCT_CREATE_SUCCESS,
+			payload: data,
+		});
+	} catch (e) {
+		dispatch({
+			type: PRODUCT_CREATE_FAIL,
+			payload:
+				e.response && e.response.data.message
+					? e.response.data.message
+					: e.message,
+		});
+	}
+};
+
+export const updateProduct = (product) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: PRODUCT_UPDATE_REQUEST,
+		});
+		const { token } = getState().userLogin.userInfo;
+		const options = {
+			"Content-Type": "application/json",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		};
+		const { data } = await axios.put(
+			`/api/products/${product._id}`,
+			product,
+			options
+		);
+		console.log("AXIOS UPDAAATE ", axios);
+		dispatch({
+			type: PRODUCT_UPDATE_SUCCESS,
+			payload: data,
+		});
+	} catch (e) {
+		dispatch({
+			type: PRODUCT_UPDATE_FAIL,
 			payload:
 				e.response && e.response.data.message
 					? e.response.data.message

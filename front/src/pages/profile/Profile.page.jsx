@@ -10,6 +10,7 @@ import {
 	updateUserProfile,
 } from "../../redux/user/user.actions";
 import { listMyOrders } from "../../redux/order/order.actions";
+import { USER_UPDATE_PROFILE_RESET } from "../../redux/user/user.types";
 
 const Profile = () => {
 	const [name, setName] = useState("");
@@ -45,7 +46,8 @@ const Profile = () => {
 			navigate("/login");
 		} else {
 			if (!user.name) {
-				dispatch(getUserDetails());
+				dispatch({ type: USER_UPDATE_PROFILE_RESET });
+				dispatch(getUserDetails("profile"));
 				dispatch(listMyOrders());
 			} else {
 				setName(user.name);

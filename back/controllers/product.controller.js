@@ -24,30 +24,55 @@ export const getProductById = asyncHandler(async (req, res) => {
 });
 
 export const createProduct = asyncHandler(async (req, res) => {
-	// const product = new Product(req.body);
-	console.log("create product controller");
-	res.json("product created");
+	const product = new Product({
+		name: "sample name",
+		price: 0,
+		user: req.user._id,
+		image: "/images/sample.jpeg",
+		brand: "sample brand",
+		category: "sample category",
+		countInStock: 0,
+		numReviews: 0,
+		description: "sample description",
+	});
+
+	const createdProduct = await product.save();
+
+	res.status(201).json(createdProduct);
 });
 
-export const updateProduct = () => {
-	try {
-	} catch (e) {}
-};
-export const deleteProduct = async (req, res) => {
-	const product = await Product.findById(req.params.id)
-		.populate("user", "isAdmin")
-		.exec();
-	console.log(product);
-	const creatorIsAdmin = product.user.isAdmin;
-	if (!creatorIsAdmin) {
-		res.status(403).json({ msg: "You are not Admin to delete product" });
+export const updateProduct = asyncHandler(async (req, res) => {
+	const { name, price, description, image, brand, category, countInStock } =
+		req.body;
+
+	const product = await Product.findById(req.params.id);
+	if (product) {
+		product.name = name;
+		product.price = price;
+		product.description = description;
+		product.image = image;
+		product.brand = brand;
+		product.countInStock = countInStock;
+		product.category = category;
+		const updatedProduct = await product.save();
+		res.status(201).json(updatedProduct);
+	} else {
+		res.status(404);
+		throw new Error("Product not found");
 	}
-	if (req.user.id)
-		try {
-			await product.remove();
-			res.json({ msg: "product Removed" });
-		} catch (e) {}
-};
+});
+
+export const deleteProduct = asyncHandler(async (req, res) => {
+	const product = await Product.findById(req.params.id);
+
+	if (product) {
+		await product.remove();
+		res.json({ message: "Product removed" });
+	} else {
+		res.status(404);
+		throw new Error("Product not found");
+	}
+});
 
 export const createProductReview = asyncHandler(async (req, res) => {});
 
