@@ -10,6 +10,7 @@
     "dev": "SET NODE_ENV=development&& concurrently \"npm run dev --prefix back\" \"npm run start --prefix front\"",
     "data:import": "npm run seeder --prefix back",
     "data:destroy": "npm run destroyseed --prefix back",
-    "start": "npm run start --prefix back"
+    "start": "npm run start --prefix back",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix back && npm install --prefix front && npm run build --prefix front"
   }
 }
