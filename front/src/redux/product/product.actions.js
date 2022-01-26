@@ -25,24 +25,28 @@ import {
 	PRODUCT_TOP_FAIL,
 } from "./product.types";
 
-export const listProducts = () => async (dispatch) => {
-	try {
-		dispatch({ type: PRODUCT_LIST_REQUEST });
-		const { data } = await axios.get("/api/products");
-		dispatch({
-			type: PRODUCT_LIST_SUCCESS,
-			payload: data,
-		});
-	} catch (e) {
-		dispatch({
-			type: PRODUCT_LIST_FAIL,
-			payload:
-				e.response && e.response.data.message
-					? e.response.data.message
-					: e.message,
-		});
-	}
-};
+export const listProducts =
+	(keyword = "", pageNumber = "") =>
+	async (dispatch) => {
+		try {
+			dispatch({ type: PRODUCT_LIST_REQUEST });
+			const { data } = await axios.get(
+				`/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
+			);
+			dispatch({
+				type: PRODUCT_LIST_SUCCESS,
+				payload: data,
+			});
+		} catch (e) {
+			dispatch({
+				type: PRODUCT_LIST_FAIL,
+				payload:
+					e.response && e.response.data.message
+						? e.response.data.message
+						: e.message,
+			});
+		}
+	};
 
 export const listProductDetails = (id) => async (dispatch) => {
 	try {
@@ -149,3 +153,52 @@ export const updateProduct = (product) => async (dispatch, getState) => {
 		});
 	}
 };
+
+export const createProductReview =
+	(productId, review) => async (dispatch, getState) => {
+		try {
+			dispatch({
+				type: PRODUCT_CREATE_REVIEW_REQUEST,
+			});
+			const { token } = getState().userLogin.userInfo;
+			const options = {
+				"Content-Type": "application/json",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+			await axios.post(`/api/products/${productId}/reviews`, review, options);
+			dispatch({
+				type: PRODUCT_CREATE_REVIEW_SUCCESS,
+			});
+		} catch (e) {
+			dispatch({
+				type: PRODUCT_CREATE_REVIEW_FAIL,
+				payload:
+					e.response && e.response.data.message
+						? e.response.data.message
+						: e.message,
+			});
+		}
+	};
+
+export const listTopProducts =
+	(keyword = "", pageNumber = "") =>
+	async (dispatch) => {
+		try {
+			dispatch({ type: PRODUCT_TOP_REQUEST });
+			const { data } = await axios.get(`/api/products/top`);
+			dispatch({
+				type: PRODUCT_TOP_SUCCESS,
+				payload: data,
+			});
+		} catch (e) {
+			dispatch({
+				type: PRODUCT_TOP_FAIL,
+				payload:
+					e.response && e.response.data.message
+						? e.response.data.message
+						: e.message,
+			});
+		}
+	};
